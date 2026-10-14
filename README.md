@@ -1,8 +1,10 @@
 # InsightAgent 2.0 — 面向电商复杂业务的多模态智能诊断与取数 Agent
 
-> 基于国内零售数仓 **CN-Retail 2.0（8.9 万行结构化数据、8 张核心业务表、1.8 万字真实差评原声）** 构建的工业级业务洞察与自主排障 Agent 系统。
+> **InsightAgent 2.0** 是一套面向真实电商数仓运营场景构建的工业级端到端业务洞察与自主排障 Agent 系统。
 >
-> 采用「**LangGraph 双轨状态机 + AST 确定性编译器 + 0-Token 依存指代消解 + 双模 BGE 重排检索 + 多模型熔断网关与 KV 前缀缓存 + 跨模态对抗性反思 + SAGE 统计门禁 + Redlock 分布式锁**」全链路技术闭环，**纯本地环境无需外部 LLM API Key 即可完整运行核心链路**。
+> 系统基于国内零售数仓 **CN-Retail 2.0（8.9 万行结构化数据、8 张核心业务表、1.8 万字真实差评原声）** 构建，采用「**LangGraph 双轨状态机 + AST 确定性编译器 + 0-Token 依存指代消解 + 双模 BGE 跨注意力重排 + 多模型熔断网关与 KV 前缀缓存 + 跨模态对抗性反思 + SAGE 统计门禁 + Redlock 分布式锁**」全链路技术架构。
+>
+> 💡 **开箱即用**：纯本地环境无需外部 LLM API Key 即可完整运行核心链路与离线数仓分析。
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
 [![Tests Passing](https://img.shields.io/badge/pytest-80%2F80%20passing-brightgreen.svg)](tests/)
@@ -15,20 +17,19 @@
 
 ## 📑 目录导航
 
-- [💼 简历项目经历模板（STAR 黄金法则 · 可直接复制使用）](#-简历项目经历模板star-黄金法则--可直接复制使用)
-- [⚡ 核心量化指标与工程实测收益](#-核心量化指标与工程实测收益)
-- [🎯 项目定位与解决的核心痛点](#-项目定位与解决的核心痛点)
-- [🛠️ 核心技术栈全景](#️-核心技术栈全景)
-- [💡 Agent 架构设计亮点与答辩要点](#-agent-架构设计亮点与答辩要点)
+- [⚡ 核心量化指标与工程表现](#-核心量化指标与工程表现)
+- [🎯 业务背景与系统定位](#-业务背景与系统定位)
+- [🏛️ 系统架构与核心设计亮点](#️-系统架构与核心设计亮点)
   - [1. LangGraph 双轨大一统状态机（Fast-path + Deep-path）](#1-langgraph-双轨大一统状态机fast-path--deep-path)
   - [2. 0-Token 依存句法指代消解 (CoreferenceResolver)](#2-0-token-依存句法指代消解-coreferenceresolver)
   - [3. 跨模态因果根因诊断与对抗性质询反思 (Reflector)](#3-跨模态因果根因诊断与对抗性质询反思-reflector)
-  - [4. 双模领域自适应 RAG 与零权重 Cross-Attention 重排](#4-双模领域自适应-rag-与零权重-cross-attention-重排)
+  - [4. 双模领域自适应 RAG 与跨注意力重排](#4-双模领域自适应-rag-与跨注意力重排)
   - [5. KV Cache 前缀规范化与高可用三态熔断网关](#5-kv-cache-前缀规范化与高可用三态熔断网关)
   - [6. Secure-by-Default HITL 审批与 Redlock 分布式互斥锁](#6-secure-by-default-hitl-审批与-redlock-分布式互斥锁)
   - [7. Dual-Loop 双循环自进化与 SAGE 统计显著性决策门禁](#7-dual-loop-双循环自进化与-sage-统计显著性决策门禁)
-- [🎬 工业级实战案例拆解：生鲜退款率激增排障 (The "Hero" Case)](#-工业级实战案例拆解生鲜退款率激增排障-the-hero-case)
-- [🚀 如何使用这个项目（快速上手与实操）](#-如何使用这个项目快速上手与实操)
+- [🎬 典型实战业务流转：生鲜退款率激增排障 (The "Hero" Case)](#-典型实战业务流转生鲜退款率激增排障-the-hero-case)
+- [🛠️ 核心技术栈全景](#️-核心技术栈全景)
+- [🚀 快速开始与使用指南](#-快速开始与使用指南)
   - [1. 环境准备与依赖安装](#1-环境准备与依赖安装)
   - [2. 环境配置说明](#2-环境配置说明)
   - [3. 一键启动基础设施 (Docker Compose)](#3-一键启动基础设施-docker-compose)
@@ -40,32 +41,14 @@
 
 ---
 
-## 💼 简历项目经历模板（STAR 黄金法则 · 可直接复制使用）
+## ⚡ 核心量化指标与工程表现
 
-> 💡 **投递建议**：适用于 **AI Agent 架构师 / 大模型应用开发工程师 / 高级后端开发（LLM 方向）** 岗位，各项量化指标均有代码单元测试与基准报告严格背书。
+经过严苛的基准测试、高并发压测与消融实验，系统的关键性能指标如下：
 
-### 【项目名称】
-**InsightAgent 2.0 — 面向电商复杂业务的多模态智能诊断与取数 Agent**  
-*核心标签：`Python 3.12+` · `LangGraph` · `NL2SQL 编译器` · `Qdrant` · `Redis 7.2` · `Redlock` · `Multi-Provider Gateway` · `KV Prompt Cache` · `FastAPI` · `Docker Compose`*
-
-### 【项目描述】
-针对电商数仓运营中日常取数时效慢（小时级）、指标异常归因链路割裂、大模型多轮调用延迟高与高并发资金动作风险等痛点，基于真实电商数仓 **CN-Retail 2.0（8.9 万行结构化数据、8 张核心业务表）** 构建的工业级端到端业务洞察与自主排障 Agent 系统。
-
-### 【核心技术与产出 (STAR)】
-- **双轨状态机编排 (LangGraph)**：设计并落地 **Fast-path（确定性编译）+ Deep-path（认知协同）** 双轨大一统图拓扑。通过 `cn_nl2sql` 规则编译器直接承接 80% 的高频标准取数，平均响应 **0.98 ms（较线上千亿模型提速 19,865 倍）**；级联意图路由器耗时仅 **0.06 ms（0 Token 消耗）**，统一 `/chat` 接口支持全生命周期状态流转与断点恢复。
-- **0-Token 依存指代消解 (Coreference)**：基于语法依存与插槽替换研发 `CoreferenceResolver`，无需调用大模型做重写，在 **0 Token 开销下实现 0.07 ms 极速响应**，在 25 类涵盖多轮实体替换（“换成江苏”）、代词回溯（“那它的退款率呢”）及省略追问（“顺丰呢”）的业务评测中达成 **100% 准确率（传统基线 0%）**。
-- **跨模态因果诊断与对抗性反思 (Reflector)**：打通结构化指标下钻与非结构化买家差评（Qdrant 向量单阶段过滤），针对异动指标构建**对抗性质询反思机制**，在下发诊断前主动构建证伪假设进行反向推演，成功拦截“大促销量波动”等诱导性假设，达成 **Hit@1 100% 且虚警率 (FPR) 0%**。
-- **KV Cache 规范化与高可用熔断网关**：实现 `PromptCacheOptimizer` 对 Schema 拓扑与 Few-Shot 进行 SHA-256 前缀对齐，使长多轮会话 **KV Cache 命中率达 98%，累计降低 84.47% 的 Token 成本**；研发集成三态熔断器（Closed/Open/Half-Open）的 `MultiProviderGateway`，在突发高并发压测下突破 **41,200+ QPS**，64 线程 0 死锁，故障无缝转移率 100%。
-- **资金风控与统计自进化门禁 (Redlock + SAGE)**：高危补救动作（如发券补偿）采用 **Secure-by-Default 策略自动挂起**并触发断点（`pending_hitl_approval`）等待人工审批；落地 **Redlock 32 线程分布式并发互斥锁，实测 1 胜 31 拒（100% 幂等）**，彻底消除重复扣发风险；策略自进化上线前引入 **SAGE McNemar 统计显著性决策门禁（惩罚系数 2.0）**，坚决拦截破坏基线历史用例的劣质热更。
-
----
-
-## ⚡ 核心量化指标与工程实测收益
-
-| 评测维度 | 核心技术方案 | 实测性能与指标 | 对比传统大模型方案 / 基线 | 核心收益与成效 |
+| 评估维度 | 核心技术方案 | 实测性能与指标 | 对比传统大模型方案 / 基线 | 核心收益与成效 |
 | :--- | :--- | :---: | :---: | :--- |
-| **高频取数时效** | `cn_nl2sql` 确定性编译器 | **0.98 ms** | 线上大模型 ~19,507 ms | **19,865 倍极速响应**，承接 80% 日常标准报表需求 |
-| **意图分类开销** | 级联意图路由器 (Cascade) | **0.06 ms / 0 Token** | 大模型分类 ~23,140 ms | **100% 路由 Token 节省**，毫秒级快速分流 |
+| **高频取数时效** | `cn_nl2sql` 确定性编译器 | **0.98 ms** | 线上大模型 ~19,507 ms | **19,865 倍极速响应**，稳定承接 80% 日常标准报表需求 |
+| **意图分类开销** | 级联意图路由器 (Cascade) | **0.06 ms / 0 Token** | 大模型分类 ~23,140 ms | **100% 路由 Token 节省**，实现首道请求毫秒级分流 |
 | **多轮指代消解** | `CoreferenceResolver` 依存消解 | **0.07 ms / 0 Token** | 模型重写 ~1,200 ms / 350 Token | **25 类问答用例 100% 准召，提速 16,000+ 倍** |
 | **KV Cache 复用** | `PromptCacheOptimizer` 前缀规范化 | **84.47% 费用节省** | 无前缀对齐全量计费 | **50 轮连续提问中实现 98% 缓存命中率** |
 | **长尾记忆注入** | `MemoryStore.recall()` Few-Shot | **+50.0% 准确率跃升** | 冷启动 Zero-Shot (30% 准确率) | **准确率由 30% 跃升至 80%，100% 拦截 JOIN 扇出** |
@@ -76,37 +59,26 @@
 
 ---
 
-## 🎯 项目定位与解决的核心痛点
+## 🎯 业务背景与系统定位
 
-在大型电商企业级数仓运营中，业务人员日常面临两大不可调和的矛盾：
-1. **80% 的高频标准取数**（如“统计各省妥投率”、“昨日各品类 GMV”）：业务方要求**秒级甚至毫秒级响应**、结果 **100% 准确无幻觉**。如果盲目让大模型每次全量生成 SQL，不仅每次耗时十几秒、费用高昂，还极易出现语法错漏或非法 JOIN 导致的笛卡尔积扇出虚增。
-2. **20% 的复杂长尾异常归因**（如“为什么生鲜类目 7 月份退款率突然飙升 15%？”）：这类问题无法仅凭查 SQL 报表得到答案，必须跨越模态边界，将**结构化经营指标**与**非结构化买家差评原声、物流流转节点**进行关联，并且推断过程极易受到诱导性假设干扰。
+在大型电商企业级数仓运营中，业务人员日常面临两大核心矛盾：
+1. **80% 的高频标准分析取数**（如“统计各省妥投率”、“昨日各品类 GMV 走势”）：
+   业务方要求**秒级甚至毫秒级极速响应**、结果 **100% 确定无幻觉**。如果盲目让大模型每次全量生成 SQL，不仅每次耗时十几秒、费用高昂，还极易出现语法错漏或非法多表 JOIN 导致的笛卡尔积扇出虚增。
+2. **20% 的长尾复杂异常归因**（如“为什么生鲜类目 7 月份退款率突然飙升 15%？”）：
+   这类问题无法仅凭 SQL 取数报表获得答案，必须跨越模态边界，将**结构化经营指标**与**非结构化买家差评原声、物流流转节点**进行交叉归因，同时推断过程极易受到诱导性假设干扰。
 
-**InsightAgent 2.0 确立的架构设计准则**：
+**InsightAgent 2.0 确立的核心架构哲学**：
 > **“确定性逻辑交给编译器，创造性推理交给大模型；安全高危动作加锁挂起，策略热更依托统计门禁。”**
 
----
-
-## 🛠️ 核心技术栈全景
-
-| 架构分层 | 技术选型 | 真实源码位置 | 工程定位与选型考量 |
-| :--- | :--- | :--- | :--- |
-| **Agent 状态机编排** | **LangGraph** (v0.2+) | [`src/insight_agent/app/graph.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/graph.py) | 构建支持 13 个功能节点、4 个条件路由分支与断点中断的统一状态图拓扑 |
-| **自然语言取数编译** | **自研 AST 编译器** | [`src/insight_agent/app/cn_nl2sql.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/cn_nl2sql.py) | 948 行全自研确定性解析器，涵盖实体识别、时间计算、度量聚合与防扇出构造 |
-| **对话理解与指代消解**| **CoreferenceResolver** | [`src/insight_agent/app/coreference.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/coreference.py) | 纯依赖句法与槽位替换，0 Token 消耗解决实体替换、代词回溯与省略追问 |
-| **基础数仓底座** | **SQLite 3 (C-Authorizer)** | [`src/insight_agent/data/cn_retail_db.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/data/cn_retail_db.py) | 挂载 8.9 万行 CN-Retail 2.0 数仓，底层 C 语言级别拦截写操作，保障物理只读 |
-| **向量检索引擎** | **Qdrant (Rust 引擎)** | [`src/insight_agent/app/qdrant_store.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/qdrant_store.py) | 存储差评语义向量，结合 Payload 标签进行类目与时间范围的 Rust 原生 Bitset 预过滤 |
-| **双模重排评分引擎** | **Heuristic / ONNX / API** | [`src/insight_agent/app/bge_reranker.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/bge_reranker.py) | 默认开箱采用启发式跨注意力算法（零依赖、毫秒级）；同时内建支持无缝加载 ONNX 量化模型或远程 BGE API |
-| **内存与分布式锁** | **Redis 7.2 / Redlock** | [`src/insight_agent/app/redis_store.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/redis_store.py) | 提供三层记忆系统（L1 会话/L2 画像/L3 情景），并提供 Redlock 原子互斥锁 |
-| **网关弹性与缓存** | **MultiProviderGateway** | [`src/insight_agent/core/providers/gateway.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/core/providers/gateway.py) | 多模型提供商三态熔断自愈（41,200+ QPS），KV 前缀规范化（降本 84.47%） |
-| **自进化统计门禁** | **SAGE McNemar Gate** | [`src/insight_agent/eval/sage_gate.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/eval/sage_gate.py) | 成对用例 McNemar 检验与非对称惩罚（2.0），坚决阻断劣化热更 |
-| **Web 统一入口** | **FastAPI** | [`src/insight_agent/api.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/api.py) | 提供统一 `/chat` 接口，支持 Adhoc 取数、架构解释、因果排障与 `/resume` 审批 |
+系统通过构建**双轨大一统图状态机（Dual-Track StateGraph）**，彻底实现高频标准链路与长尾复杂推理的有机解耦与协同。
 
 ---
 
-## 💡 Agent 架构设计亮点与答辩要点
+## 🏛️ 系统架构与核心设计亮点
 
 ### 1. LangGraph 双轨大一统状态机（Fast-path + Deep-path）
+
+系统通过 **LangGraph** 构建了包含 13 个功能节点与 4 条条件路由分支的统一状态机拓扑：
 
 ```mermaid
 flowchart TD
@@ -144,48 +116,47 @@ flowchart TD
     end
 ```
 
-- **架构选型思考 (Trade-off)**：为什么不用纯单体 ReAct Agent？  
-  *答辩思路*：在真实生产环境下，单体 ReAct 面对大并发高频查询时延迟与成本不可接受。LangGraph 双轨设计将高频确定的 80% 请求在入口直接分流至微秒级子图（0.98 ms），同时保留图拓扑处理长尾复杂因果状态回溯的灵活性，实现了系统吞吐量与推理深度的平衡。
+- **级联意图分流 (Cascade Router)**：以 **0.06 ms** 极速完成首道分类。80% 的日常指标统计直接命中 Fast-path；复杂长尾与因果排障则转由 Deep-path 处理。
+- **Fast-path 确定性编译器 (`cn_nl2sql`)**：直接解析语法树构造带预编译参数的安全 SQL，**0.98 ms 极速响应，100% 确定性准确率，0 LLM Token 开销**。
+- **统一服务接口**：统一在 `@app.post("/chat")` 暴露，对外抹平底层分流细节，保证全生命周期会话状态可追溯。
 
 ---
 
 ### 2. 0-Token 依存句法指代消解 (CoreferenceResolver)
 
-- **核心实现原理**：
-  构建于 [`src/insight_agent/app/coreference.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/coreference.py)，不依赖千亿大模型生成，纯靠依存关系提取与实体插槽替换：
-  - **显式实体替换**：“把刚才那个地区换成江苏省再查一遍” -> 精准定位上一轮 SQL 中的 `province_filter` 槽位并做原地替换。
+在多轮交互对话中（例如：用户先查“上海已妥投订单”，紧接着追问“那江苏呢？”或“把刚才的地区换成浙江”）：
+- 模块位于 [`src/insight_agent/app/coreference.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/coreference.py)，不依赖大模型重写，纯靠语法依存与实体插槽替换：
+  - **显式实体替换**：“把刚才那个地区换成江苏省再查一遍” -> 定位上一轮 SQL 中的 `province_filter` 槽位原地替换。
   - **代词与主语回溯**：“那它的退款率呢” -> 提取焦点实体（如某特定商品 ID），自动注入新度量公式。
   - **省略追问**：“顺丰呢？”、“那浙江呢？” -> 智能判断追问所属维度（物流承运商 vs 行政省份），继承前序度量与时间范围。
-- **实测成果**：25 类连续多轮业务提问，准确率 **100%（传统基线 0%）**，耗时仅 **0.07 ms**，**0 Token 开销**，相比大模型重写方案提速 **16,000+ 倍**。
+- **实测性能**：在 25 类涵盖多轮实体替换、代词回溯与省略追问的业务评测中，达成 **100% 准召（基线 0%）**，耗时仅 **0.07 ms**，**0 Token 开销**，相比传统大模型重写方案提速 **16,000+ 倍**。
 
 ---
 
 ### 3. 跨模态因果根因诊断与对抗性质询反思 (Reflector)
 
-- **业务异动定位**：
-  在指标出现异常突增（如“7 月份华东退款率暴增”）时，状态机自动进入 `hypothesis_planner_node` 与 `hypothesis_tester_node`：
-  - **结构化维度下钻**：下钻分析品类、商家、物流承运商，发现“华东大闸蟹”在“中通快递”承运下的妥投延误率异常飙升。
-  - **非结构化差评原声聚类**：联动 Qdrant 对 10 万+ 用户评价进行向量检索与情感聚类，捕获“包装破损”、“冰袋融化变质”等共性原声。
+面对业务指标异动（如“7 月份华东退款率暴增”），系统自动进入因果状态机执行深度排障：
+- **结构化指标下钻**：自动下钻品类、商家与承运商，发现特定专营店由特定物流承运的妥投延误率异常飙升。
+- **非结构化差评原声聚类**：联动 Qdrant 对 10 万+ 用户评价进行向量检索与情感聚类，捕获“死蟹/包装破损/冰袋融化变质”等共性原声。
 - **对抗性质询反思 (Reflector)**：
-  大模型归因极易产生“顺从幻觉”（如误信提问者诱导的“是否是价格上涨导致退货？”）。系统在 `evidence_judge_node` 中强制引入**对抗性质询**：先主动寻找反面事实证伪诱导假设，唯有证据链闭合时才确认真实根因，达成 **Hit@1 100% / 0% FPR（零虚警）**。
+  大模型推理极易受到诱导性先验干扰（如误判为“商家提价”）。系统在 `evidence_judge_node` 中强制引入**对抗性质询**：主动构造反面假设进行反向事实证伪，只有证据链严密闭合时才确认真实根因，达成 **Hit@1 100% 且虚警率 (FPR) 0%**。
 
 ---
 
-### 4. 双模领域自适应 RAG 与零权重 Cross-Attention 重排
+### 4. 双模领域自适应 RAG 与跨注意力重排
 
-- **为什么需要自适应 RAG**：
-  电商数仓表关系错综复杂，全量灌入 Schema 会迅速撑爆 Context 且极易引发笛卡尔积。系统建立 **Schema 元数据 4 元组拓扑（表名、中英别名、主外键拓扑约束、业务场景说明）** 与 **防扇出安全 JOIN 拓扑白名单**。
-- **双模重排评分引擎**：
-  代码在 [`src/insight_agent/app/bge_reranker.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/bge_reranker.py) 中实现了精妙的分层架构：
-  1. **开箱即用层 (`HeuristicCrossAttentionReranker`)**：纯 Python + 数学归一化实现，内建供应链业务同义词库（如“软果/变质/发黑/漏液”）与长度惩罚。**无需安装庞大 PyTorch、无需下载数百兆权重，本地与 CI/CD 毫秒级复现**。
-  2. **生产扩展层 (`ONNXBGEReranker` & 远程 API)**：可一键无缝接入本地 CPU ONNX 量化模型或云端 TEI/SiliconFlow 标准 `/v1/rerank` 接口，支持大型企业私有化部署。
+电商数仓关联复杂度极高，全量塞入 DDL 会导致 Context 爆炸且极易引发笛卡尔积。系统通过自适应机制构建高效检索通路：
+- **Schema 4 元组拓扑**：固化表名、中英别名、主外键拓扑约束关系、业务场景描述，并建立**防扇出安全 JOIN 拓扑白名单**。
+- **分层双模重排评分引擎 ([`bge_reranker.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/bge_reranker.py))**：
+  1. **开箱即用层 (`HeuristicCrossAttentionReranker`)**：纯 Python + 数学归一化实现，内建供应链业务同义词库（如“软果/变质/发黑/漏液”）与长度惩罚。**无需安装庞大深度学习框架、无需下载数百兆权重，本地与 CI/CD 毫秒级复现**。
+  2. **生产扩展层 (`ONNXBGEReranker` & 远程 API)**：内建支持无缝加载本地 CPU ONNX 量化模型或云端 TEI/SiliconFlow 标准 `/v1/rerank` 接口，满足企业私有化部署。
 
 ---
 
 ### 5. KV Cache 前缀规范化与高可用三态熔断网关
 
 - **PromptCacheOptimizer**：
-  依据千亿大模型（如 DeepSeek、OpenAI、Claude）的 KV 前缀缓存机制，对系统 Prompt、Schema 拓扑说明、动态 Few-Shot 样本进行严格的确定性规范化排序与 SHA-256 指纹锚定。
+  对千亿大模型（DeepSeek、OpenAI、Claude）的 KV 前缀缓存机制深度定制，将系统 Prompt、Schema 拓扑说明、动态 Few-Shot 样本进行确定性规范化排序与 SHA-256 指纹锚定。
   - **实测成果**：50 轮连续业务流中达成 **98.0% 缓存命中率，净降低 84.47% 的 Token 计费**。
 - **MultiProviderGateway**：
   构建有限状态机（CLOSED -> OPEN -> HALF_OPEN），配合多 Key 轮询与故障健康探测。
@@ -208,11 +179,11 @@ flowchart TD
   - **Inner Loop（内循环）**：线上实时状态流转，毫秒级快速路由与安全执行。
   - **Outer Loop（外循环）**：离线构建基于 Ragas 的评估流水线，对历史案例进行定期回放与评分。
 - **SAGE 统计门禁 (McNemar Test)**：
-  坚决杜绝“盲目根据均值涨跌决定 Prompt/策略上线”的工程陋习。系统强制执行**成对用例的 McNemar 检验（要求 $p \le 0.05$）**，并对基线已有正确用例的破坏施加 **2.0 倍的非对称惩罚**。实测在 200 题大盘中坚决输出 **ABSTAIN（弃权/拒绝盲更）**，确保系统在生产自进化过程中基线零退化。
+  坚决杜绝“盲目根据均值涨跌决定 Prompt/策略上线”的工程风险。系统强制执行**成对用例的 McNemar 检验（要求 $p \le 0.05$）**，并对基线已有正确用例的破坏施加 **2.0 倍的非对称惩罚**。实测在 200 题大盘中坚决输出 **ABSTAIN（弃权/拒绝盲更）**，确保系统在生产自进化过程中基线零退化。
 
 ---
 
-## 🎬 工业级实战案例拆解：生鲜退款率激增排障 (The "Hero" Case)
+## 🎬 典型实战业务流转：生鲜退款率激增排障 (The "Hero" Case)
 
 > **实战场景**：大促运营期间，系统监控告警“7 月份华东大区生鲜食品类目退款率激增”，业务人员通过统一入口 `/chat` 发起排查。
 
@@ -252,11 +223,28 @@ sequenceDiagram
 
 ---
 
-## 🚀 如何使用这个项目（快速上手与实操）
+## 🛠️ 核心技术栈全景
+
+| 架构分层 | 技术选型 | 真实源码位置 | 工程定位与选型考量 |
+| :--- | :--- | :--- | :--- |
+| **Agent 状态机编排** | **LangGraph** (v0.2+) | [`src/insight_agent/app/graph.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/graph.py) | 构建支持 13 个功能节点、4 个条件路由分支与断点中断的统一状态图拓扑 |
+| **自然语言取数编译** | **自研 AST 编译器** | [`src/insight_agent/app/cn_nl2sql.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/cn_nl2sql.py) | 948 行全自研确定性解析器，涵盖实体识别、时间计算、度量聚合与防扇出构造 |
+| **对话理解与指代消解**| **CoreferenceResolver** | [`src/insight_agent/app/coreference.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/coreference.py) | 纯依赖句法与槽位替换，0 Token 消耗解决实体替换、代词回溯与省略追问 |
+| **基础数仓底座** | **SQLite 3 (C-Authorizer)** | [`src/insight_agent/data/cn_retail_db.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/data/cn_retail_db.py) | 挂载 8.9 万行 CN-Retail 2.0 数仓，底层 C 语言级别拦截写操作，保障物理只读 |
+| **向量检索引擎** | **Qdrant (Rust 引擎)** | [`src/insight_agent/app/qdrant_store.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/qdrant_store.py) | 存储差评语义向量，结合 Payload 标签进行类目与时间范围的 Rust 原生 Bitset 预过滤 |
+| **双模重排评分引擎** | **Heuristic / ONNX / API** | [`src/insight_agent/app/bge_reranker.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/bge_reranker.py) | 默认开箱采用启发式跨注意力算法（零依赖、毫秒级）；同时内建支持无缝加载 ONNX 量化模型或远程 BGE API |
+| **内存与分布式锁** | **Redis 7.2 / Redlock** | [`src/insight_agent/app/redis_store.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/app/redis_store.py) | 提供三层记忆系统（L1 会话/L2 画像/L3 情景），并提供 Redlock 原子互斥锁 |
+| **网关弹性与缓存** | **MultiProviderGateway** | [`src/insight_agent/core/providers/gateway.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/core/providers/gateway.py) | 多模型提供商三态熔断自愈（41,200+ QPS），KV 前缀规范化（降本 84.47%） |
+| **自进化统计门禁** | **SAGE McNemar Gate** | [`src/insight_agent/eval/sage_gate.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/eval/sage_gate.py) | 成对用例 McNemar 检验与非对称惩罚（2.0），坚决阻断劣化热更 |
+| **Web 统一入口** | **FastAPI** | [`src/insight_agent/api.py`](file:///d:/Antigravity_code/InsightAgent/src/insight_agent/api.py) | 提供统一 `/chat` 接口，支持 Adhoc 取数、架构解释、因果排障与 `/resume` 审批 |
+
+---
+
+## 🚀 快速开始与使用指南
 
 ### 1. 环境准备与依赖安装
 
-系统要求 **Python 3.12+**。推荐使用新一代极速包管理器 [uv](https://docs.astral.sh/uv/)。
+系统要求 **Python 3.12+**。推荐使用现代极速包管理器 [uv](https://docs.astral.sh/uv/)。
 
 ```bash
 # 1. 克隆代码仓库
@@ -275,7 +263,7 @@ uv sync --all-extras --dev
 cp .env.example .env
 ```
 
-- **纯本地极速体验（零配置）**：
+- **纯本地极速体验（零外部依赖）**：
   **无需填入任何外部大模型 API Key**。系统默认使用本地 CN-Retail 2.0 数仓、Fast-path 确定性编译器以及开箱即用的 Heuristic Reranker，即可畅享毫秒级取数与多轮指代消解。
 - **启用千亿大模型深度因果推断（Deep-path）**：
   若需体验跨模态因果诊断与复杂推理，在 `.env` 中配置相应的 API Key（支持 DeepSeek、OpenAI、Qwen、Claude 等）：
@@ -286,7 +274,7 @@ cp .env.example .env
 
 ### 3. 一键启动基础设施 (Docker Compose)
 
-系统提供了极简编排，启动生产级 Redis 7.2 与 Qdrant 向量数据库：
+系统提供了开箱即用的微服务编排，启动生产级 Redis 7.2 与 Qdrant 向量数据库：
 
 ```bash
 # 一键后台启动基础设施集群
