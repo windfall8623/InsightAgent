@@ -1,0 +1,57 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+wheels/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+!.env.infra.example
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Agent run artifacts
+runs/
+*.log
+
+# Generated sandbox database
+src/insight_agent/data/ecommerce.db
+src/insight_agent/data/olist.db
+src/insight_agent/data/*.db
+
+# Evaluation output artifacts
+eval_results/
+
+# Test scratch data
+.testdata/
+
+# Coverage data
+.coverage
+.coverage.*
+htmlcov/
+
+# BFCL benchmark cache (downloaded, ~1MB)
+.bfcl_cache/
+
+scratch/
+docs/

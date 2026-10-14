@@ -1,0 +1,107 @@
+# ==============================================================================
+# InsightAgent 2.0 Cloud-Native Production Stack
+#
+# Components:
+# 1. insight-agent-app: FastAPI + React Cockpit SPA + LangGraph StateGraph + MCP + Diagnostic Engine
+# 2. insight-agent-redis: Redis 7.2 (L1 Session TTL, L2 GDPR Profile, L3 Episodic, Redlock)
+# 3. insight-agent-qdrant: Qdrant 1.13 (Rust HNSW Vector Engine + Single-Stage Payload Filter)
+# ==============================================================================
+
+version: "3.8"
+
+services:
+  # ── 1. Core Application Service ─────────────────────────────────────────────
+  insight-agent-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: insight-agent-app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    env_file:
+      - .env
+    environment:
+      - INSIGHT_ENV=production
+      - REDIS_URL=redis://insight-agent-redis:6379/0
+      - QDRANT_URL=http://insight-agent-qdrant:6333
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://insight-agent-jaeger:4318/v1/traces
+      - PORT=8000
+    depends_on:
+      insight-agent-redis:
+        condition: service_healthy
+      insight-agent-qdrant:
+        condition: service_healthy
+      insight-agent-jaeger:
+        condition: service_started
+    volumes:
+      - insight_app_data:/app/data
+    networks:
+      - insight_net
+
+  # ── 2. Redis State & Distributed Lock Service ──────────────────────────────
+  insight-agent-redis:
+    image: redis:7.2-alpine
+    container_name: insight-agent-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - insight_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - insight_net
+
+  # ── 3. Qdrant Rust Vector Database Service ─────────────────────────────────
+  insight-agent-qdrant:
+    image: qdrant/qdrant:v1.13.0
+    container_name: insight-agent-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333" # REST API & Web Dashboard
+      - "6334:6334" # gRPC API
+    volumes:
+      - insight_qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - insight_net
+
+  # ── 4. OpenTelemetry & Jaeger Distributed Tracing Service ───────────────────
+  insight-agent-jaeger:
+    image: jaegertracing/all-in-one:1.57
+    container_name: insight-agent-jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686" # Jaeger Web UI
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - insight_net
+
+volumes:
+  insight_app_data:
+    name: insight_agent_app_data
+  insight_redis_data:
+    name: insight_agent_redis_data
+  insight_qdrant_data:
+    name: insight_agent_qdrant_data
+
+networks:
+  insight_net:
+    name: insight_agent_network
+    driver: bridge

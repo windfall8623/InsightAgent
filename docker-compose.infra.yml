@@ -1,0 +1,66 @@
+# ==============================================================================
+# InsightAgent 2.0 Local Infrastructure Stack (Redis + Qdrant + Jaeger)
+#
+# Use this when running the Python application locally via:
+#   $ uv run uvicorn insight_agent.api:app --reload
+#
+# Usage:
+#   $ docker compose -f docker-compose.infra.yml up -d
+# ==============================================================================
+
+version: "3.8"
+
+services:
+  # ── 1. Redis Cache, Memory & Distributed Lock ──────────────────────────────
+  insight-redis:
+    image: redis:7.2-alpine
+    container_name: insight-infra-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_infra_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  # ── 2. Qdrant Vector Search Engine (HNSW) ──────────────────────────────────
+  insight-qdrant:
+    image: qdrant/qdrant:v1.13.0
+    container_name: insight-infra-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333" # REST API & Dashboard (http://localhost:6333/dashboard)
+      - "6334:6334" # gRPC API
+    volumes:
+      - qdrant_infra_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── 3. Jaeger Distributed Tracing & OpenTelemetry Collector ─────────────────
+  insight-jaeger:
+    image: jaegertracing/all-in-one:1.57
+    container_name: insight-infra-jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686" # Web UI (http://localhost:16686)
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver (endpoint: http://localhost:4318/v1/traces)
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+
+volumes:
+  redis_infra_data:
+    name: insight_infra_redis_data
+  qdrant_infra_data:
+    name: insight_infra_qdrant_data

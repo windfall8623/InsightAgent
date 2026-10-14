@@ -1,0 +1,19 @@
+# Normalise line endings on checkin so diffs stay clean across platforms.
+* text=auto eol=lf
+
+# Windows scripts must keep CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.py text diff=python
+*.md text
+*.toml text
+*.lock text
+
+# Binary assets.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.whl binary

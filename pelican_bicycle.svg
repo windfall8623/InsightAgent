@@ -1,0 +1,505 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="100%" height="100%">
+  <defs>
+    <!-- 渐变与滤镜 -->
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0F7FA"/>
+      <stop offset="60%" stop-color="#FFF9C4"/>
+      <stop offset="100%" stop-color="#FFE0B2"/>
+    </linearGradient>
+
+    <linearGradient id="roadGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#78909C"/>
+      <stop offset="100%" stop-color="#455A64"/>
+    </linearGradient>
+
+    <linearGradient id="beakTopGrad" x1="0%" y1="0%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#FFA000"/>
+      <stop offset="70%" stop-color="#FFB300"/>
+      <stop offset="100%" stop-color="#FF6F00"/>
+    </linearGradient>
+
+    <linearGradient id="pouchGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#FF8A65"/>
+      <stop offset="60%" stop-color="#FF7043"/>
+      <stop offset="100%" stop-color="#F4511E"/>
+    </linearGradient>
+
+    <linearGradient id="bikeFrameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#26A69A"/>
+      <stop offset="50%" stop-color="#00897B"/>
+      <stop offset="100%" stop-color="#00695C"/>
+    </linearGradient>
+
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ECEFF1"/>
+      <stop offset="50%" stop-color="#B0BEC5"/>
+      <stop offset="100%" stop-color="#78909C"/>
+    </linearGradient>
+
+    <linearGradient id="leatherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8D6E63"/>
+      <stop offset="100%" stop-color="#4E342E"/>
+    </linearGradient>
+
+    <linearGradient id="lampGlow" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#FFF59D" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFF9C4" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <style>
+    /* ========== 动画核心样式 ========== */
+
+    /* 车轮与曲柄快速自转 */
+    .spin-wheel {
+      animation: wheelRotate 0.8s linear infinite;
+    }
+    .spin-crank {
+      transform-origin: 470px 485px;
+      animation: crankRotate 0.8s linear infinite;
+    }
+
+    /* 踏板反向自转保持水平 */
+    .pedal-counter-near {
+      transform-origin: 512px 485px;
+      animation: counterRotate 0.8s linear infinite;
+    }
+    .pedal-counter-far {
+      transform-origin: 428px 485px;
+      animation: counterRotate 0.8s linear infinite;
+    }
+
+    /* 车身轻微颠簸与骑行节奏 */
+    .bike-bounce {
+      animation: bikeBob 0.4s ease-in-out infinite;
+      transform-origin: 470px 485px;
+    }
+
+    /* 鹈鹕躯体骑行上下踩踏律动 */
+    .pelican-rider {
+      animation: riderBob 0.4s ease-in-out infinite;
+      transform-origin: 410px 320px;
+    }
+
+    /* 鹈鹕喉囊果冻弹性晃动 */
+    .pouch-jiggle {
+      animation: pouchBounce 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+      transform-origin: 575px 195px;
+    }
+
+    /* 围巾尾端在风中高速飘动 */
+    .scarf-flutter-1 {
+      animation: scarfWave1 0.28s ease-in-out infinite alternate;
+      transform-origin: 460px 225px;
+    }
+    .scarf-flutter-2 {
+      animation: scarfWave2 0.32s ease-in-out infinite alternate;
+      transform-origin: 460px 228px;
+    }
+
+    /* 近侧腿蹬踏（曲柄关联位移） */
+    .near-leg {
+      animation: pedalLegNear 0.8s linear infinite;
+      transform-origin: 415px 330px;
+    }
+
+    /* 远侧腿蹬踏（相位差180度） */
+    .far-leg {
+      animation: pedalLegFar 0.8s linear infinite;
+      transform-origin: 415px 330px;
+    }
+
+    /* 地面标线飞速向后 */
+    .road-lines {
+      animation: roadMove 0.4s linear infinite;
+    }
+
+    /* 速度风线 */
+    .speed-line-1 { animation: speedPass 0.6s linear infinite; }
+    .speed-line-2 { animation: speedPass 0.75s linear infinite 0.2s; }
+    .speed-line-3 { animation: speedPass 0.55s linear infinite 0.4s; }
+
+    /* 车轮扬尘烟圈 */
+    .smoke-puff-1 { animation: smokeFloat 0.6s ease-out infinite; }
+    .smoke-puff-2 { animation: smokeFloat 0.6s ease-out infinite 0.3s; }
+
+    /* 眨眼生动动画 */
+    .blinking-eye {
+      animation: blink 3.2s infinite;
+      transform-origin: 560px 148px;
+    }
+
+    /* ========== 关键帧定义 ========== */
+    @keyframes wheelRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes crankRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes counterRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+    @keyframes bikeBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-3.5px) rotate(0.4deg); }
+    }
+    @keyframes riderBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(-1.2deg); }
+    }
+    @keyframes pouchBounce {
+      0% { transform: scale(1, 1) rotate(0deg); }
+      100% { transform: scale(1.06, 0.94) rotate(-3.5deg); }
+    }
+    @keyframes scarfWave1 {
+      0% { transform: rotate(-8deg) scaleY(0.9); }
+      100% { transform: rotate(18deg) scaleY(1.15); }
+    }
+    @keyframes scarfWave2 {
+      0% { transform: rotate(12deg) scaleY(1.1); }
+      100% { transform: rotate(-14deg) scaleY(0.85); }
+    }
+    @keyframes roadMove {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -120; }
+    }
+    @keyframes speedPass {
+      0% { transform: translateX(250px); opacity: 0; }
+      20% { opacity: 0.8; }
+      100% { transform: translateX(-400px); opacity: 0; }
+    }
+    @keyframes smokeFloat {
+      0% { transform: translate(0, 0) scale(0.4); opacity: 0.8; }
+      70% { opacity: 0.4; }
+      100% { transform: translate(-65px, -30px) scale(1.6); opacity: 0; }
+    }
+    @keyframes blink {
+      0%, 94%, 98%, 100% { transform: scaleY(1); }
+      96% { transform: scaleY(0.08); }
+    }
+
+    /* 近侧腿曲柄联动运动（四拍拟真蹬车） */
+    @keyframes pedalLegNear {
+      0% {
+        transform: rotate(8deg) translateY(4px);
+      }
+      25% {
+        transform: rotate(20deg) translateY(10px);
+      }
+      50% {
+        transform: rotate(4deg) translateY(18px);
+      }
+      75% {
+        transform: rotate(-12deg) translateY(8px);
+      }
+      100% {
+        transform: rotate(8deg) translateY(4px);
+      }
+    }
+
+    /* 远侧腿蹬车（反相180度） */
+    @keyframes pedalLegFar {
+      0% {
+        transform: rotate(4deg) translateY(18px);
+      }
+      25% {
+        transform: rotate(-12deg) translateY(8px);
+      }
+      50% {
+        transform: rotate(8deg) translateY(4px);
+      }
+      75% {
+        transform: rotate(20deg) translateY(10px);
+      }
+      100% {
+        transform: rotate(4deg) translateY(18px);
+      }
+    }
+  </style>
+
+  <!-- 背景天空与远景 -->
+  <rect x="0" y="0" width="1000" height="680" fill="url(#skyGrad)"/>
+
+  <!-- 远景微风与速度线 -->
+  <g stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.6">
+    <line class="speed-line-1" x1="750" y1="90" x2="880" y2="90"/>
+    <line class="speed-line-2" x1="820" y1="140" x2="940" y2="140"/>
+    <line class="speed-line-3" x1="700" y1="200" x2="850" y2="200"/>
+    <line class="speed-line-1" x1="680" y1="380" x2="800" y2="380"/>
+  </g>
+
+  <!-- 远景小云朵 -->
+  <g fill="#FFFFFF" opacity="0.75">
+    <path d="M120,110 Q140,85 170,95 Q205,80 235,105 Q260,105 270,125 Q270,140 240,140 L130,140 Q110,140 120,110 Z"/>
+    <path d="M720,70 Q735,50 760,60 Q790,45 815,65 Q835,65 845,80 Q845,95 820,95 L730,95 Q710,95 720,70 Z" opacity="0.6"/>
+  </g>
+
+  <!-- 道路基座与行车路面 -->
+  <rect x="0" y="530" width="1000" height="150" fill="url(#roadGrad)"/>
+  <rect x="0" y="530" width="1000" height="8" fill="#546E7A"/>
+  
+  <!-- 飞速移动的公路虚线 -->
+  <line class="road-lines" x1="0" y1="600" x2="1000" y2="600" stroke="#FFE082" stroke-width="7" stroke-linecap="round" stroke-dasharray="55, 65"/>
+
+  <!-- 地面阴影 -->
+  <ellipse cx="480" cy="550" rx="310" ry="14" fill="#263238" opacity="0.25"/>
+
+  <!-- 后轮扬起的烟尘 -->
+  <g fill="#ECEFF1">
+    <circle class="smoke-puff-1" cx="240" cy="535" r="10"/>
+    <circle class="smoke-puff-2" cx="230" cy="540" r="14"/>
+  </g>
+
+  <!-- ==================== 整个自行车与骑手结构 (颠簸联动) ==================== -->
+  <g class="bike-bounce">
+
+    <!-- 车头灯光束 -->
+    <polygon points="760,375 990,320 990,470 760,405" fill="url(#lampGlow)" opacity="0.75"/>
+
+    <!-- ================= 远侧腿 (在车架之后) ================= -->
+    <g class="far-leg" opacity="0.75">
+      <!-- 大腿与小腿 (深灰/橙色脚蹼) -->
+      <path d="M 405,335 Q 380,410 405,455 L 428,485" fill="none" stroke="#ECEFF1" stroke-width="16" stroke-linecap="round"/>
+      <path d="M 405,335 Q 380,410 405,455 L 428,485" fill="none" stroke="#CFD8DC" stroke-width="11" stroke-linecap="round"/>
+      <!-- 远侧脚蹼 (踩在远侧踏板上) -->
+      <polygon points="415,482 445,475 450,490 415,492" fill="#E65100"/>
+    </g>
+
+    <!-- ================= 后轮组件 ================= -->
+    <!-- 后轮中心: (270, 485), 半径 65 -->
+    <g id="rear-wheel">
+      <!-- 黑色外胎 -->
+      <circle cx="270" cy="485" r="66" fill="none" stroke="#263238" stroke-width="14"/>
+      <circle cx="270" cy="485" r="72" fill="none" stroke="#37474F" stroke-width="2"/>
+      <!-- 银色轮圈 -->
+      <circle cx="270" cy="485" r="59" fill="none" stroke="url(#rimGrad)" stroke-width="4"/>
+
+      <!-- 旋转辐条群 -->
+      <g class="spin-wheel" style="transform-origin: 270px 485px;">
+        <line x1="270" y1="426" x2="270" y2="544" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="211" y1="485" x2="329" y2="485" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="228" y1="443" x2="312" y2="527" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="228" y1="527" x2="312" y2="443" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="245" y1="430" x2="295" y2="540" stroke="#CFD8DC" stroke-width="1.8"/>
+        <line x1="295" y1="430" x2="245" y2="540" stroke="#CFD8DC" stroke-width="1.8"/>
+        <!-- 辐条反光反光片 -->
+        <rect x="264" y="440" width="12" height="6" rx="2" fill="#FFA000"/>
+      </g>
+      <!-- 花鼓轴心 -->
+      <circle cx="270" cy="485" r="10" fill="#455A64"/>
+      <circle cx="270" cy="485" r="5" fill="#B0BEC5"/>
+      <!-- 经典复古后挡泥板 -->
+      <path d="M 205,485 A 72 72 0 0 1 332,440" fill="none" stroke="#00897B" stroke-width="7" stroke-linecap="round"/>
+      <path d="M 205,485 L 270,485" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+    </g>
+
+    <!-- ================= 前轮组件 ================= -->
+    <!-- 前轮中心: (710, 485), 半径 65 -->
+    <g id="front-wheel">
+      <circle cx="710" cy="485" r="66" fill="none" stroke="#263238" stroke-width="14"/>
+      <circle cx="710" cy="485" r="72" fill="none" stroke="#37474F" stroke-width="2"/>
+      <circle cx="710" cy="485" r="59" fill="none" stroke="url(#rimGrad)" stroke-width="4"/>
+
+      <!-- 前轮旋转辐条 -->
+      <g class="spin-wheel" style="transform-origin: 710px 485px;">
+        <line x1="710" y1="426" x2="710" y2="544" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="651" y1="485" x2="769" y2="485" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="668" y1="443" x2="752" y2="527" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="668" y1="527" x2="752" y2="443" stroke="#CFD8DC" stroke-width="2"/>
+        <line x1="685" y1="430" x2="735" y2="540" stroke="#CFD8DC" stroke-width="1.8"/>
+        <line x1="735" y1="430" x2="685" y2="540" stroke="#CFD8DC" stroke-width="1.8"/>
+        <rect x="704" y="440" width="12" height="6" rx="2" fill="#FFA000"/>
+      </g>
+      <circle cx="710" cy="485" r="10" fill="#455A64"/>
+      <circle cx="710" cy="485" r="5" fill="#B0BEC5"/>
+      <!-- 前挡泥板 -->
+      <path d="M 648,460 A 72 72 0 0 1 758,450" fill="none" stroke="#00897B" stroke-width="7" stroke-linecap="round"/>
+      <path d="M 710,485 L 652,472" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+    </g>
+
+    <!-- ================= 自行车车架 (复古薄荷绿钻石车架) ================= -->
+    <!-- 关键节点: 后轴(270,485), 中轴五通(470,485), 座管结(395,355), 头管上(630,320), 头管下(645,365), 前叉底(710,485) -->
+    <g id="bike-frame" filter="url(#softShadow)">
+      <!-- 后下叉 (Chainstay) 与 链条 -->
+      <line x1="270" y1="485" x2="470" y2="485" stroke="#37474F" stroke-width="8" stroke-linecap="round"/>
+      <line x1="270" y1="485" x2="470" y2="485" stroke="url(#bikeFrameGrad)" stroke-width="6"/>
+
+      <!-- 牙盘大齿轮与链条护罩 -->
+      <circle cx="470" cy="485" r="28" fill="#B0BEC5"/>
+      <path d="M 270,478 L 470,465 C 495,465 505,485 490,505 L 270,495 Z" fill="#26A69A" opacity="0.35"/>
+      <circle cx="470" cy="485" r="23" fill="#455A64"/>
+
+      <!-- 后上叉 (Seatstay) -->
+      <line x1="270" y1="485" x2="395" y2="355" stroke="url(#bikeFrameGrad)" stroke-width="7" stroke-linecap="round"/>
+
+      <!-- 立管 (Seat Tube) -->
+      <line x1="470" y1="485" x2="395" y2="355" stroke="url(#bikeFrameGrad)" stroke-width="9" stroke-linecap="round"/>
+
+      <!-- 下管 (Down Tube) -->
+      <line x1="470" y1="485" x2="645" y2="365" stroke="url(#bikeFrameGrad)" stroke-width="10" stroke-linecap="round"/>
+
+      <!-- 上管 (Top Tube) 略微倾斜优雅横梁 -->
+      <line x1="395" y1="355" x2="630" y2="320" stroke="url(#bikeFrameGrad)" stroke-width="8" stroke-linecap="round"/>
+
+      <!-- 前叉 (Fork) 与头管 -->
+      <line x1="630" y1="310" x2="648" y2="370" stroke="url(#bikeFrameGrad)" stroke-width="11" stroke-linecap="round"/>
+      <line x1="648" y1="370" x2="710" y2="485" stroke="url(#bikeFrameGrad)" stroke-width="8" stroke-linecap="round"/>
+
+      <!-- 车把立管 (Stem) & 燕把 (Handlebar) -->
+      <path d="M 630,310 L 624,265 L 600,260" fill="none" stroke="#ECEFF1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- 把套手柄胶 -->
+      <rect x="588" y="253" width="22" height="13" rx="4" fill="#4E342E"/>
+
+      <!-- 复古复古黄色车铃铛 -->
+      <circle cx="616" cy="254" r="7" fill="#FFCA28"/>
+      <circle cx="616" cy="254" r="3" fill="#FFE082"/>
+
+      <!-- 复古镀铬车头灯 -->
+      <path d="M 648,340 L 675,340 L 672,365 L 645,360 Z" fill="#ECEFF1"/>
+      <ellipse cx="673" cy="352" rx="4" ry="12" fill="#FFF59D"/>
+
+      <!-- 座管与真皮弹簧车座 -->
+      <line x1="395" y1="355" x2="388" y2="328" stroke="#CFD8DC" stroke-width="6"/>
+      <!-- 车座底部减震双弹簧 -->
+      <circle cx="366" cy="326" r="5" fill="none" stroke="#78909C" stroke-width="2.5"/>
+      <circle cx="380" cy="326" r="5" fill="none" stroke="#78909C" stroke-width="2.5"/>
+      <!-- 宽厚舒适的复古皮鞍座 -->
+      <path d="M 345,320 C 350,305 400,305 425,322 C 410,332 355,332 345,320 Z" fill="url(#leatherGrad)"/>
+    </g>
+
+    <!-- ================= 牙盘、曲柄与脚踏 (旋转机构) ================= -->
+    <g class="spin-crank">
+      <!-- 远侧曲柄臂与踏板 -->
+      <line x1="470" y1="485" x2="428" y2="485" stroke="#90A4AE" stroke-width="6" stroke-linecap="round"/>
+      <g class="pedal-counter-far">
+        <rect x="416" y="480" width="24" height="8" rx="3" fill="#263238"/>
+      </g>
+
+      <!-- 牙盘五通中心装饰盖 -->
+      <circle cx="470" cy="485" r="14" fill="#CFD8DC"/>
+      <circle cx="470" cy="485" r="6" fill="#37474F"/>
+
+      <!-- 近侧曲柄臂与踏板 -->
+      <line x1="470" y1="485" x2="512" y2="485" stroke="#ECEFF1" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="512" cy="485" r="4" fill="#78909C"/>
+      <g class="pedal-counter-near">
+        <rect x="500" y="480" width="25" height="10" rx="3" fill="#37474F"/>
+        <rect x="503" y="482" width="19" height="6" rx="2" fill="#FFB300"/>
+      </g>
+    </g>
+
+    <!-- ==================== 骑车主角：大嘴鹈鹕 (律动组合) ==================== -->
+    <g class="pelican-rider">
+
+      <!-- 鹈鹕蓬松羽毛翘尾巴 -->
+      <path d="M 350,285 C 320,270 290,278 280,265 C 295,290 325,305 355,305 Z" fill="#ECEFF1"/>
+      <path d="M 340,292 C 315,285 292,295 285,280 C 302,300 325,312 350,312 Z" fill="#CFD8DC"/>
+
+      <!-- 鹈鹕浑圆肥美身体 (躯干) -->
+      <ellipse cx="400" cy="275" rx="55" ry="46" fill="#FFFFFF" filter="url(#softShadow)"/>
+      <!-- 腹部阴影质感羽毛 -->
+      <path d="M 360,285 C 380,315 425,315 445,295 C 430,320 375,322 360,285 Z" fill="#ECEFF1"/>
+
+      <!-- 优雅挺拔的 S 形脖颈 -->
+      <path d="M 430,260 C 455,245 470,210 480,165 C 500,165 520,200 485,260 Z" fill="#FFFFFF"/>
+      <path d="M 445,260 C 465,225 475,190 485,168 C 495,185 480,240 455,270 Z" fill="#ECEFF1"/>
+
+      <!-- 飘动的红色波点复古领巾 (结扣) -->
+      <circle cx="475" cy="225" r="9" fill="#E53935"/>
+      <circle cx="475" cy="225" r="4" fill="#FFCDD2"/>
+      <!-- 领巾飘带1 -->
+      <path class="scarf-flutter-1" d="M 470,225 C 440,230 405,210 380,225 C 405,238 440,242 468,232 Z" fill="#E53935"/>
+      <!-- 领巾飘带2 -->
+      <path class="scarf-flutter-2" d="M 470,228 C 445,240 415,230 390,250 C 420,255 450,252 470,235 Z" fill="#C62828"/>
+
+      <!-- 鹈鹕头部 -->
+      <circle cx="530" cy="155" r="32" fill="#FFFFFF"/>
+      <circle cx="522" cy="155" r="28" fill="#F5F5F5"/>
+
+      <!-- 呆萌灵动的大眼睛 -->
+      <g class="blinking-eye">
+        <ellipse cx="550" cy="145" rx="10" ry="13" fill="#212121"/>
+        <!-- 眼神高光 -->
+        <circle cx="547" cy="140" r="4" fill="#FFFFFF"/>
+        <circle cx="553" cy="148" r="1.8" fill="#FFFFFF"/>
+      </g>
+      <!-- 专注喜悦的眉毛 -->
+      <path d="M 538,133 Q 552,126 565,134" fill="none" stroke="#37474F" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- 巨型标志性鹈鹕大嘴（下颌喉囊：带果冻弹性物理晃动） -->
+      <g class="pouch-jiggle">
+        <!-- 标志性大喉囊 (半透明弹性大网兜) -->
+        <path d="M 545,172 C 555,225 615,265 675,220 C 720,185 735,178 740,175 C 680,185 580,185 545,172 Z" fill="url(#pouchGrad)" opacity="0.95"/>
+        <!-- 喉囊上的微血管/纹理光泽条纹 -->
+        <path d="M 565,178 Q 615,235 660,205" fill="none" stroke="#FFAB91" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+        <path d="M 590,182 Q 630,225 675,195" fill="none" stroke="#FFAB91" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+        <!-- 嘴兜里偷藏的小鱼尾巴在外面快乐晃动！ -->
+        <g transform="translate(685, 172) rotate(-15)">
+          <path d="M 0,0 C 15,-10 25,-5 35,-15 L 32,5 C 22,0 15,10 0,0 Z" fill="#4DD0E1"/>
+          <line x1="18" y1="-2" x2="30" y2="-5" stroke="#0097A7" stroke-width="1.5"/>
+        </g>
+      </g>
+
+      <!-- 坚硬的长上喙与末端尖钩 -->
+      <path d="M 535,150 C 570,148 680,158 745,172 C 750,173 748,180 740,180 C 675,172 580,166 535,166 Z" fill="url(#beakTopGrad)"/>
+      <!-- 上喙末端可爱的小倒钩 -->
+      <path d="M 742,172 Q 749,176 743,183 Q 737,180 740,173 Z" fill="#D84315"/>
+
+      <!-- 酷炫复古骑行小帽 (反戴帽檐朝后，充满个性) -->
+      <path d="M 505,142 C 510,120 545,116 560,135 Z" fill="#FDD835"/>
+      <path d="M 505,142 Q 482,145 476,140 Q 485,134 510,137 Z" fill="#C62828"/>
+      <circle cx="534" cy="120" r="3.5" fill="#C62828"/>
+
+      <!-- 健硕有力的羽翼翅膀 (像手臂一样握住车把手) -->
+      <!-- 翅膀从背部肩部 (410, 245) 优雅延伸至把手 (595, 260) -->
+      <g filter="url(#softShadow)">
+        <!-- 翅膀主体上臂 -->
+        <path d="M 405,250 C 440,225 500,230 550,248 C 575,258 595,260 598,264 C 585,275 550,285 500,280 C 445,275 400,270 405,250 Z" fill="#FFFFFF"/>
+        <!-- 初级飞羽层次 (深灰/黑色翼尖握把动作) -->
+        <path d="M 550,252 C 572,256 592,260 600,266 C 588,274 570,276 548,272 Z" fill="#37474F"/>
+        <path d="M 525,262 C 550,268 578,272 588,278 C 570,285 545,283 520,275 Z" fill="#546E7A"/>
+        <path d="M 470,268 C 500,276 535,280 552,286 C 530,292 495,288 468,278 Z" fill="#78909C"/>
+      </g>
+
+      <!-- ================= 近侧腿 (蹬踏动作关键帧联动) ================= -->
+      <g class="near-leg">
+        <!-- 粗壮的白色大腿根部羽毛 -->
+        <ellipse cx="420" cy="328" rx="20" ry="14" fill="#ECEFF1" transform="rotate(25 420 328)"/>
+
+        <!-- 结实的腿胫骨 (橙黄关节) -->
+        <path d="M 425,335 Q 460,405 480,445 L 512,485" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round"/>
+        <path d="M 425,335 Q 460,405 480,445 L 512,485" fill="none" stroke="#FF9800" stroke-width="10" stroke-linecap="round"/>
+        <!-- 膝关节与踝关节高光 -->
+        <circle cx="480" cy="445" r="7" fill="#FFA726"/>
+
+        <!-- 标志性宽大的鹈鹕蹼足 (稳稳踩在近侧踏板上) -->
+        <g transform="translate(508, 480)">
+          <!-- 大脚蹼蹼膜与脚趾 -->
+          <path d="M -5,4 L 32,-4 C 36,2 34,14 26,16 L -5,9 Z" fill="#F57C00"/>
+          <line x1="-5" y1="4" x2="30" y2="0" stroke="#E65100" stroke-width="2"/>
+          <line x1="-5" y1="6" x2="28" y2="10" stroke="#E65100" stroke-width="2"/>
+          <!-- 黑色小脚爪爪尖 -->
+          <circle cx="32" cy="-4" r="2.5" fill="#212121"/>
+          <circle cx="30" cy="6" r="2.5" fill="#212121"/>
+          <circle cx="26" cy="16" r="2.5" fill="#212121"/>
+        </g>
+      </g>
+
+    </g> <!-- 鹈鹕骑手结束 -->
+
+  </g> <!-- 自行车全组颠簸结束 -->
+
+  <!-- 前方速度流线 -->
+  <g stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.7">
+    <line class="speed-line-3" x1="900" y1="260" x2="980" y2="260"/>
+    <line class="speed-line-2" x1="880" y1="450" x2="990" y2="450"/>
+  </g>
+</svg>
