@@ -109,37 +109,37 @@ InsightAgent 2.0 全景功能矩阵
 
 ```mermaid
 flowchart TD
-    User([业务提问 / 会话上下文]) --> InGuard{InputGuard 安全审计}
-    InGuard -->|拦截 SQL 注入/越权| Blocked[直接阻断安全告警]
-    InGuard -->|安全通过| Cascade[级联意图路由器 Cascade Router]
+    User(["业务提问 / 会话上下文"]) --> InGuard{"InputGuard 安全审计"}
+    InGuard -->|"拦截 SQL 注入/越权"| Blocked["直接阻断安全告警"]
+    InGuard -->|"安全通过"| Cascade["级联意图路由器 Cascade Router"]
     
-    Cascade -->|标准分析取数 80%| FastPath[Fast-path 确定性编译器 Subgraph]
-    Cascade -->|长尾复杂提问 20%| DeepPath[Deep-path 千亿大模型协同流转]
-    Cascade -->|差评异动/指标恶化| CausalGraph[LangGraph 深度因果诊断状态机]
+    Cascade -->|"标准分析取数 80%"| FastPath["Fast-path 确定性编译器 Subgraph"]
+    Cascade -->|"长尾复杂提问 20%"| DeepPath["Deep-path 千亿大模型协同流转"]
+    Cascade -->|"差评异动/指标恶化"| CausalGraph["LangGraph 深度因果诊断状态机"]
     
     subgraph FastTrack ["Fast-path 极速链路 (0.98 ms)"]
-        FastPath --> Coref[CoreferenceResolver 0-Token 依存消解]
-        Coref --> AST[AST 语法树构建 & 明细聚合防扇出]
-        AST --> SQLiteAuth[SQLite 引擎级 C-Authorizer 只读执行]
+        FastPath --> Coref["CoreferenceResolver 0-Token 依存消解"]
+        Coref --> AST["AST 语法树构建 & 明细聚合防扇出"]
+        AST --> SQLiteAuth["SQLite 引擎级 C-Authorizer 只读执行"]
     end
     
     subgraph DeepTrack ["Deep-path 智能编排与因果推断"]
-        CausalGraph --> Schema[Schema 混合检索 & ONNX 神经重排]
-        CausalGraph --> Qdrant[Qdrant Rust Bitset 差评原声单阶段过滤]
-        CausalGraph --> Reflection[条件反思与假设证伪机制 Reflector]
-        CausalGraph --> Gateway[MultiProviderGateway 三态熔断网关]
-        Gateway --> PromptOpt[PromptCacheOptimizer KV 前缀对齐]
+        CausalGraph --> Schema["Schema 混合检索 & ONNX 神经重排"]
+        CausalGraph --> Qdrant["Qdrant Rust Bitset 差评原声单阶段过滤"]
+        CausalGraph --> Reflection["条件反思与假设证伪机制 Reflector"]
+        CausalGraph --> Gateway["MultiProviderGateway 三态熔断网关"]
+        Gateway --> PromptOpt["PromptCacheOptimizer KV 前缀对齐"]
     end
     
     subgraph SafetyGate ["生产发布与高危执行门禁"]
-        DeepTrack --> HITL{Secure-by-Default 审批}
-        HITL -->|高危发券/改配置| Pending[pending_hitl_approval 挂起断点]
-        Pending --> Resume[人工核实覆写参数 /resume]
-        Resume --> Redlock[Redlock 分布式互斥锁 (32线程 1胜31拒)]
+        DeepTrack --> HITL{"Secure-by-Default 审批"}
+        HITL -->|"高危发券/改配置"| Pending["pending_hitl_approval 挂起断点"]
+        Pending --> Resume["人工核实覆写参数 /resume"]
+        Resume --> Redlock["Redlock 分布式互斥锁 (32线程 1胜31拒)"]
         
-        Reflection --> SAGE{SAGE McNemar 统计门禁}
-        SAGE -->|p <= 0.05 且无退化| AutoDeploy[批准自进化策略热更新]
-        SAGE -->|破坏基线 Case| Reject[坚决阻断发布 REJECT]
+        Reflection --> SAGE{"SAGE McNemar 统计门禁"}
+        SAGE -->|"显著提升且无退化"| AutoDeploy["批准自进化策略热更新"]
+        SAGE -->|"破坏基线 Case"| Reject["坚决阻断发布 REJECT"]
     end
 ```
 
